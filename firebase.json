@@ -1,1 +1,56 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"gestion-esmia","appId":"1:381473826253:android:e44153b3eab8a1857d9084","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"gestion-esmia","configurations":{"android":"1:381473826253:android:e44153b3eab8a1857d9084","ios":"1:381473826253:ios:25946542189995b97d9084","macos":"1:381473826253:ios:25946542189995b97d9084","web":"1:381473826253:web:7073b7ffdbada1e77d9084","windows":"1:381473826253:web:c83680bec191fd877d9084"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "gestion-esmia",
+          "appId": "1:381473826253:android:e44153b3eab8a1857d9084",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "gestion-esmia",
+          "appId": "1:381473826253:ios:25946542189995b97d9084",
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "web": {
+        "default": {
+          "projectId": "gestion-esmia",
+          "appId": "1:381473826253:web:7073b7ffdbada1e77d9084"
+        }
+      }
+    },
+    "dart": {
+      "lib/config/firebase_options.dart": {
+        "projectId": "gestion-esmia",
+        "configurations": {
+          "android": "1:381473826253:android:e44153b3eab8a1857d9084",
+          "ios": "1:381473826253:ios:25946542189995b97d9084",
+          "macos": "1:381473826253:ios:25946542189995b97d9084",
+          "web": "1:381473826253:web:7073b7ffdbada1e77d9084",
+          "windows": "1:381473826253:web:c83680bec191fd877d9084"
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}}
