@@ -9,6 +9,7 @@ class AppTheme {
   static const Color menafifyColor = Color(0xFF5B2C1F); // Grenat
   
   static const Color primaryColor = Color(0xFF1a4d7e);
+  static const Color sampanaPrimaryColor = Color(0xFF1a4d7e); // Primary color for UI
   static const Color accentColor = Color(0xFFFF6B35);
   static const Color successColor = Color(0xFF2ECC71);
   static const Color errorColor = Color(0xFFE74C3C);

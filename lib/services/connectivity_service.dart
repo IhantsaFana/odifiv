@@ -15,14 +15,15 @@ class ConnectivityService extends GetxService {
   }
 
   void _initConnectivityListener() {
-    _connectivity.onConnectivityChanged.listen((result) {
-      isOnline.value = result != ConnectivityResult.none;
+    _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      final isConnected = !results.contains(ConnectivityResult.none);
+      isOnline.value = isConnected;
       logger.i('Connectivity changed: ${isOnline.value ? "Online" : "Offline"}');
     });
   }
 
   Future<bool> checkConnectivity() async {
-    final result = await _connectivity.checkConnectivity();
-    return result != ConnectivityResult.none;
+    final results = await _connectivity.checkConnectivity();
+    return !results.contains(ConnectivityResult.none);
   }
 }

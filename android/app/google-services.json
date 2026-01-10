@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "381473826253",
+    "project_id": "gestion-esmia",
+    "storage_bucket": "gestion-esmia.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381473826253:android:e44153b3eab8a1857d9084",
+        "android_client_info": {
+          "package_name": "com.example.fivondronana"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "381473826253-q5790324290mlkstpjofe0olee7j6oir.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMO3uOBpFYfLaFVxSans0rYr9S1GlGLn8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "381473826253-q5790324290mlkstpjofe0olee7j6oir.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "381473826253-19uoh7co4doj545fem6ddgv50qbh8e3k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fivondronana"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
