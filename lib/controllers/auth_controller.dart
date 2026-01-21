@@ -165,6 +165,34 @@ class AuthController extends GetxController {
     }
   }
 
+  /// Login with Google
+  Future<bool> loginWithGoogle() async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = null;
+
+      final user = await authService.loginWithGoogle();
+
+      if (user != null) {
+        currentUser.value = user;
+        logger.i('User logged in with Google: ${user.email}');
+        return true;
+      }
+      return false;
+    } on FirebaseAuthException catch (e) {
+      final message = _getFirebaseErrorMessage(e.code);
+      errorMessage.value = message;
+      logger.e('Google login error: $message');
+      return false;
+    } catch (e) {
+      errorMessage.value = e.toString();
+      logger.e('Error during Google Sign-In: $e');
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   /// Clear error message
   void clearError() {
     errorMessage.value = null;

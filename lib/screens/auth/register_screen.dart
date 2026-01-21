@@ -5,6 +5,7 @@ import '../../config/app_theme.dart';
 import '../../widgets/auth_header.dart';
 import '../../widgets/custom_input_field.dart';
 import '../../widgets/custom_button.dart';
+import '../../widgets/social_login_button.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -92,6 +93,19 @@ class _RegisterScreenState extends State<RegisterScreen>
     }
   }
 
+  Future<void> _handleGoogleLogin() async {
+    final success = await authController.loginWithGoogle();
+
+    if (success) {
+      Get.offAllNamed('/home');
+    } else {
+      _showErrorDialog(
+        authController.errorMessage.value ??
+            'Erreur lors de la connexion Google',
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,8 +120,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      const Color(0xFF1a4d7e).withOpacity(0.08),
-                      const Color(0xFFFF6B35).withOpacity(0.04),
+                      const Color(0xFF1a4d7e).withValues(alpha: 0.08),
+                      const Color(0xFFFF6B35).withValues(alpha: 0.04),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -213,38 +227,34 @@ class _RegisterScreenState extends State<RegisterScreen>
                         const SizedBox(height: 12),
 
                         // Password strength indicator
-                        StatefulBuilder(
-                          builder: (context, setState) {
-                            final password = _passwordController.text;
-                            final hasLength = password.length >= 8;
-                            final hasUpperCase = password.contains(
-                              RegExp(r'[A-Z]'),
-                            );
-                            final hasNumber = password.contains(
-                              RegExp(r'[0-9]'),
-                            );
+                        Obx(() {
+                          final password = _passwordController.text;
+                          final hasLength = password.length >= 8;
+                          final hasUpperCase = password.contains(
+                            RegExp(r'[A-Z]'),
+                          );
+                          final hasNumber = password.contains(RegExp(r'[0-9]'));
 
-                            return Column(
-                              children: [
-                                if (password.isNotEmpty) ...[
-                                  const SizedBox(height: 8),
-                                  _PasswordCriterion(
-                                    label: 'Au moins 8 caractères',
-                                    isMet: hasLength,
-                                  ),
-                                  _PasswordCriterion(
-                                    label: 'Une lettre majuscule',
-                                    isMet: hasUpperCase,
-                                  ),
-                                  _PasswordCriterion(
-                                    label: 'Un chiffre',
-                                    isMet: hasNumber,
-                                  ),
-                                ],
+                          return Column(
+                            children: [
+                              if (password.isNotEmpty) ...[
+                                const SizedBox(height: 8),
+                                _PasswordCriterion(
+                                  label: 'Au moins 8 caractères',
+                                  isMet: hasLength,
+                                ),
+                                _PasswordCriterion(
+                                  label: 'Une lettre majuscule',
+                                  isMet: hasUpperCase,
+                                ),
+                                _PasswordCriterion(
+                                  label: 'Un chiffre',
+                                  isMet: hasNumber,
+                                ),
                               ],
-                            );
-                          },
-                        ),
+                            ],
+                          );
+                        }),
 
                         const SizedBox(height: 20),
 
@@ -339,6 +349,18 @@ class _RegisterScreenState extends State<RegisterScreen>
                             isLoading: authController.isLoading.value,
                             backgroundColor: AppTheme.sampanaPrimaryColor,
                             height: 56,
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Google Sign-In Button
+                        Obx(
+                          () => SocialLoginButton(
+                            label: 'S\'inscrire avec Google',
+                            icon: Icons.g_mobiledata,
+                            onPressed: _handleGoogleLogin,
+                            isLoading: authController.isLoading.value,
                           ),
                         ),
 
