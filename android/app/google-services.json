@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "381473826253-hibvo0ti9lqckmdpspr57aca8l9sfn3t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.harambato.mg",
+            "certificate_hash": "b3653d38452fc317ada5b9293c10a6db1e41914d"
+          }
+        },
+        {
           "client_id": "381473826253-q5790324290mlkstpjofe0olee7j6oir.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "381473826253-q5790324290mlkstpjofe0olee7j6oir.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "381473826253-19uoh7co4doj545fem6ddgv50qbh8e3k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fivondronana"
+              }
             }
           ]
         }
