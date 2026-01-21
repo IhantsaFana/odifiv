@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:381473826253:android:e44153b3eab8a1857d9084",
+        "mobilesdk_app_id": "1:381473826253:android:e1f984b8725e3deb7d9084",
         "android_client_info": {
-          "package_name": "com.example.fivondronana"
+          "package_name": "app.harambato.mg"
         }
       },
       "oauth_client": [
@@ -29,13 +29,6 @@
             {
               "client_id": "381473826253-q5790324290mlkstpjofe0olee7j6oir.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "381473826253-19uoh7co4doj545fem6ddgv50qbh8e3k.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.fivondronana"
-              }
             }
           ]
         }

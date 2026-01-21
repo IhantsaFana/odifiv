@@ -29,10 +29,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.windows:
         return windows;
       case TargetPlatform.linux:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return linux;
       default:
         throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',
@@ -52,7 +49,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBMO3uOBpFYfLaFVxSans0rYr9S1GlGLn8',
-    appId: '1:381473826253:android:e44153b3eab8a1857d9084',
+    appId: '1:381473826253:android:e1f984b8725e3deb7d9084',
     messagingSenderId: '381473826253',
     projectId: 'gestion-esmia',
     storageBucket: 'gestion-esmia.firebasestorage.app',
@@ -64,8 +61,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '381473826253',
     projectId: 'gestion-esmia',
     storageBucket: 'gestion-esmia.firebasestorage.app',
-    iosClientId: '381473826253-19uoh7co4doj545fem6ddgv50qbh8e3k.apps.googleusercontent.com',
-    iosBundleId: 'com.example.fivondronana',
+    iosClientId:
+        '381473826253-19uoh7co4doj545fem6ddgv50qbh8e3k.apps.googleusercontent.com',
+    iosBundleId: 'app.harambato.mg',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -74,8 +72,19 @@ class DefaultFirebaseOptions {
     messagingSenderId: '381473826253',
     projectId: 'gestion-esmia',
     storageBucket: 'gestion-esmia.firebasestorage.app',
-    iosClientId: '381473826253-19uoh7co4doj545fem6ddgv50qbh8e3k.apps.googleusercontent.com',
-    iosBundleId: 'com.example.fivondronana',
+    iosClientId:
+        '381473826253-19uoh7co4doj545fem6ddgv50qbh8e3k.apps.googleusercontent.com',
+    iosBundleId: 'app.harambato.mg',
+  );
+
+  static const FirebaseOptions linux = FirebaseOptions(
+    apiKey: 'AIzaSyDkaBV7aeZrsgTyUIeMs1EmmyJA5SiLKAY',
+    appId: '1:381473826253:web:7073b7ffdbada1e77d9084',
+    messagingSenderId: '381473826253',
+    projectId: 'gestion-esmia',
+    authDomain: 'gestion-esmia.firebaseapp.com',
+    storageBucket: 'gestion-esmia.firebasestorage.app',
+    measurementId: 'G-PQ027JQS4B',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
@@ -87,5 +96,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'gestion-esmia.firebasestorage.app',
     measurementId: 'G-GMF0S5HK78',
   );
-
 }

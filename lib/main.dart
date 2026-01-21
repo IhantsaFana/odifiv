@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-import 'config/firebase_config.dart';
+import 'firebase_options.dart';
 import 'config/app_theme.dart';
 import 'services/offline_service.dart';
 import 'services/connectivity_service.dart';
@@ -18,7 +19,9 @@ void main() async {
   try {
     // Initialize Firebase
     logger.i('Initializing Firebase...');
-    await FirebaseConfig.initialize();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
     // Initialize Offline Service (Hive)
     logger.i('Initializing offline storage...');
@@ -51,18 +54,9 @@ class FivondronanaApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       getPages: [
-        GetPage(
-          name: '/login',
-          page: () => const LoginScreen(),
-        ),
-        GetPage(
-          name: '/register',
-          page: () => const RegisterScreen(),
-        ),
-        GetPage(
-          name: '/home',
-          page: () => const HomeScreen(),
-        ),
+        GetPage(name: '/login', page: () => const LoginScreen()),
+        GetPage(name: '/register', page: () => const RegisterScreen()),
+        GetPage(name: '/home', page: () => const HomeScreen()),
       ],
       home: const AuthWrapper(),
     );
@@ -93,19 +87,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Fivondronana'),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: const Text('Fivondronana'), elevation: 0),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.person,
-              size: 80,
-              color: Color(0xFF1a4d7e),
-            ),
+            const Icon(Icons.person, size: 80, color: Color(0xFF1a4d7e)),
             const SizedBox(height: 20),
             Text(
               'Bienvenue à Fivondronana',
@@ -121,9 +108,7 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 // TODO: Navigate to login or home
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Bienvenue! À implémenter...'),
-                  ),
+                  const SnackBar(content: Text('Bienvenue! À implémenter...')),
                 );
               },
               child: const Padding(
