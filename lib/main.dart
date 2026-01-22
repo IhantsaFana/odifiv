@@ -39,16 +39,16 @@ void main() async {
     rethrow;
   }
 
-  runApp(const FivondronanaApp());
+  runApp(const HarambatoApp());
 }
 
-class FivondronanaApp extends StatelessWidget {
-  const FivondronanaApp({super.key});
+class HarambatoApp extends StatelessWidget {
+  const HarambatoApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Fivondronana',
+      title: 'Harambato',
       theme: AppTheme.getLightTheme(),
       darkTheme: AppTheme.getDarkTheme(),
       themeMode: ThemeMode.system,
@@ -86,8 +86,24 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authController = Get.find<AuthController>();
+    
     return Scaffold(
-      appBar: AppBar(title: const Text('Fivondronana'), elevation: 0),
+      appBar: AppBar(
+        title: const Text('Harambato'),
+        elevation: 0,
+        actions: [
+          // Bouton de déconnexion provisoire
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Déconnexion',
+            onPressed: () async {
+              await authController.logout();
+              Get.offAllNamed('/login');
+            },
+          ),
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -95,7 +111,7 @@ class HomeScreen extends StatelessWidget {
             const Icon(Icons.person, size: 80, color: Color(0xFF1a4d7e)),
             const SizedBox(height: 20),
             Text(
-              'Bienvenue à Fivondronana',
+              'Bienvenue à Harambato',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 10),
@@ -104,16 +120,19 @@ class HomeScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                // TODO: Navigate to login or home
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Bienvenue! À implémenter...')),
-                );
+            
+            // Bouton de déconnexion alternatif (plus visible)
+            ElevatedButton.icon(
+              onPressed: () async {
+                await authController.logout();
+                Get.offAllNamed('/login');
               },
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                child: Text('Commencer'),
+              icon: const Icon(Icons.logout),
+              label: const Text('Se déconnecter'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                backgroundColor: Colors.red[600],
+                foregroundColor: Colors.white,
               ),
             ),
           ],

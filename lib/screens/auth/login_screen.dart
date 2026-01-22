@@ -247,7 +247,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                             // Google Sign In
                             Obx(() => SocialLoginButton(
                               label: 'Se connecter avec Google',
-                              icon: Icons.g_mobiledata,
+                              imagePath: 'assets/images/google_logo.webp',
                               onPressed: _handleGoogleLogin,
                               isLoading: authController.isLoading.value,
                             )),

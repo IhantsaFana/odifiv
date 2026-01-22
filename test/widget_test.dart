@@ -12,11 +12,11 @@ import 'package:fivondronana/main.dart';
 void main() {
   testWidgets('HomeScreen displays welcome message', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const FivondronanaApp());
+    await tester.pumpWidget(const HarambatoApp());
 
     // Verify that our welcome message is displayed.
-    expect(find.text('Bienvenue à Fivondronana'), findsOneWidget);
+    expect(find.text('Bienvenue à Harambato'), findsOneWidget);
     expect(find.text('Digitalisation du Scout Protestant'), findsOneWidget);
-    expect(find.text('Commencer'), findsOneWidget);
+    expect(find.text('Se déconnecter'), findsOneWidget);
   });
 }
