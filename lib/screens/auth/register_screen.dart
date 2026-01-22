@@ -4,7 +4,6 @@ import '../../controllers/auth_controller.dart';
 import '../../config/app_theme.dart';
 import '../../widgets/custom_input_field.dart';
 import '../../widgets/custom_button.dart';
-import '../../widgets/social_login_button.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -24,18 +23,12 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
   bool _obscureConfirmPassword = true;
   bool _agreedToTerms = false;
   late AnimationController _fadeController;
-  late AnimationController _slideController;
 
   @override
   void initState() {
     super.initState();
     _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    )..forward();
-
-    _slideController = AnimationController(
-      duration: const Duration(milliseconds: 1200),
+      duration: const Duration(milliseconds: 600),
       vsync: this,
     )..forward();
   }
@@ -47,7 +40,6 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     _fadeController.dispose();
-    _slideController.dispose();
     super.dispose();
   }
 
@@ -87,17 +79,6 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
     } else {
       _showErrorDialog(
         authController.errorMessage.value ?? 'Erreur lors de l\'inscription',
-      );
-    }
-  }
-
-  Future<void> _handleGoogleLogin() async {
-    final success = await authController.loginWithGoogle();
-    if (success) {
-      Get.offAllNamed('/home');
-    } else {
-      _showErrorDialog(
-        authController.errorMessage.value ?? 'Erreur lors de la connexion Google',
       );
     }
   }
@@ -146,16 +127,9 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                 child: SingleChildScrollView(
                   physics: const ClampingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-                  child: SlideTransition(
-                    position: _slideController.drive(
-                      Tween<Offset>(
-                        begin: const Offset(0, 0.2),
-                        end: Offset.zero,
-                      ),
-                    ),
-                    child: FadeTransition(
-                      opacity: _fadeController,
-                      child: Form(
+                  child: FadeTransition(
+                    opacity: _fadeController,
+                    child: Form(
                         key: _formKey,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -274,7 +248,6 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
