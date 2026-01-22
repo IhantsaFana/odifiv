@@ -9,7 +9,6 @@ import 'services/offline_service.dart';
 import 'services/connectivity_service.dart';
 import 'controllers/auth_controller.dart';
 import 'screens/auth/login_screen.dart';
-import 'screens/auth/register_screen.dart';
 
 final logger = Logger();
 
@@ -55,7 +54,6 @@ class HarambatoApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       getPages: [
         GetPage(name: '/login', page: () => const LoginScreen()),
-        GetPage(name: '/register', page: () => const RegisterScreen()),
         GetPage(name: '/home', page: () => const HomeScreen()),
       ],
       home: const AuthWrapper(),
@@ -96,7 +94,7 @@ class HomeScreen extends StatelessWidget {
           // Bouton de déconnexion provisoire
           IconButton(
             icon: const Icon(Icons.logout),
-            tooltip: 'Déconnexion',
+            tooltip: 'Hivoaka',
             onPressed: () async {
               await authController.logout();
               Get.offAllNamed('/login');
@@ -111,12 +109,12 @@ class HomeScreen extends StatelessWidget {
             const Icon(Icons.person, size: 80, color: Color(0xFF1a4d7e)),
             const SizedBox(height: 20),
             Text(
-              'Bienvenue à Harambato',
+              'Tongasoa ise !',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 10),
             Text(
-              'Digitalisation du Scout Protestant',
+              'Digitalisation an\'ny fivondronana Harambato',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             const SizedBox(height: 30),
@@ -128,7 +126,7 @@ class HomeScreen extends StatelessWidget {
                 Get.offAllNamed('/login');
               },
               icon: const Icon(Icons.logout),
-              label: const Text('Se déconnecter'),
+              label: const Text('Hivoaka'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 backgroundColor: Colors.red[600],

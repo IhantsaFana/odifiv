@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Harambato</string>
+    <!-- App ID provenant de la console Facebook -->
+    <string name="facebook_app_id">1176035997207502</string>
+    
+    <!-- Client Token (Trouvé dans Paramètres > Avancés > Client Token). 
+         ATTENTION: Ne mettez PAS l'App Secret ici ! -->
+    <string name="facebook_client_token">7943257bd2862de13358e0ae836c749e</string>
+    
+    <!-- Protocole pour le login (fb + App ID) -->
+    <string name="fb_login_protocol_scheme">fb1176035997207502</string>
+</resources>

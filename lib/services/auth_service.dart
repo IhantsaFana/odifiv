@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:logger/logger.dart';
 
 class AuthService {
@@ -150,6 +151,49 @@ class AuthService {
       rethrow;
     } catch (e) {
       logger.e('Error during Google Sign-In: $e');
+      rethrow;
+    }
+  }
+
+  /// Login with Facebook
+  Future<User?> loginWithFacebook() async {
+    try {
+      logger.i('Starting Facebook Sign-In...');
+
+      // Trigger Facebook Sign-In flow
+      final LoginResult result = await FacebookAuth.instance.login();
+
+      if (result.status == LoginStatus.cancelled) {
+        logger.i('Facebook Sign-In cancelled by user');
+        return null;
+      } else if (result.status == LoginStatus.failed) {
+        logger.e('Facebook Sign-In failed: ${result.message}');
+        throw Exception('Facebook Sign-In failed: ${result.message}');
+      }
+
+      final AccessToken accessToken = result.accessToken!;
+      logger.i('Facebook user signed in. Token: ${accessToken.token}');
+
+      // Create credential for Firebase
+      final OAuthCredential credential =
+          FacebookAuthProvider.credential(accessToken.token);
+
+      // Sign in to Firebase with Facebook credential
+      final UserCredential userCredential =
+          await _firebaseAuth.signInWithCredential(credential);
+
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        logger.i('User logged in with Facebook: ${user.email}');
+      }
+
+      return user;
+    } on FirebaseAuthException catch (e) {
+      logger.e('Firebase Auth Error: ${e.code} - ${e.message}');
+      rethrow;
+    } catch (e) {
+      logger.e('Error during Facebook Sign-In: $e');
       rethrow;
     }
   }

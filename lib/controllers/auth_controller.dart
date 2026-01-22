@@ -37,52 +37,7 @@ class AuthController extends GetxController {
     });
   }
 
-  /// Register new user
-  Future<bool> register({
-    required String email,
-    required String password,
-    required String displayName,
-  }) async {
-    try {
-      isLoading.value = true;
-      errorMessage.value = null;
-
-      // Validate inputs
-      if (!_isValidEmail(email)) {
-        throw Exception('Email invalide');
-      }
-      if (password.length < 6) {
-        throw Exception('Le mot de passe doit contenir au moins 6 caractères');
-      }
-      if (displayName.isEmpty) {
-        throw Exception('Le nom ne peut pas être vide');
-      }
-
-      final user = await authService.registerWithEmail(
-        email: email,
-        password: password,
-        displayName: displayName,
-      );
-
-      if (user != null) {
-        currentUser.value = user;
-        logger.i('User registered: ${user.email}');
-        return true;
-      }
-      return false;
-    } on FirebaseAuthException catch (e) {
-      final message = _getFirebaseErrorMessage(e.code);
-      errorMessage.value = message;
-      logger.e('Registration error: $message');
-      return false;
-    } catch (e) {
-      errorMessage.value = e.toString();
-      logger.e('Unexpected error during registration: $e');
-      return false;
-    } finally {
-      isLoading.value = false;
-    }
-  }
+  // Registration method removed as per requirements (admin only)
 
   /// Login user
   Future<bool> login({
@@ -174,9 +129,16 @@ class AuthController extends GetxController {
       final user = await authService.loginWithGoogle();
 
       if (user != null) {
-        currentUser.value = user;
-        logger.i('User logged in with Google: ${user.email}');
-        return true;
+        if (await _checkIfUserIsAllowed(user)) {
+          currentUser.value = user;
+          logger.i('User logged in with Google: ${user.email}');
+          return true;
+        } else {
+          // User not allowed (new account), logout and show error
+          await authService.logout();
+          errorMessage.value = "Compte non reconnu. Inscription fermée au public.";
+          return false;
+        }
       }
       return false;
     } on FirebaseAuthException catch (e) {
@@ -187,6 +149,41 @@ class AuthController extends GetxController {
     } catch (e) {
       errorMessage.value = e.toString();
       logger.e('Error during Google Sign-In: $e');
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// Login with Facebook
+  Future<bool> loginWithFacebook() async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = null;
+
+      final user = await authService.loginWithFacebook();
+
+      if (user != null) {
+        if (await _checkIfUserIsAllowed(user)) {
+          currentUser.value = user;
+          logger.i('User logged in with Facebook: ${user.email}');
+          return true;
+        } else {
+          // User not allowed, logout
+          await authService.logout();
+          errorMessage.value = "Compte non reconnu. Inscription fermée au public.";
+          return false;
+        }
+      }
+      return false;
+    } on FirebaseAuthException catch (e) {
+      final message = _getFirebaseErrorMessage(e.code);
+      errorMessage.value = message;
+      logger.e('Facebook login error: $message');
+      return false;
+    } catch (e) {
+      errorMessage.value = e.toString();
+      logger.e('Error during Facebook Sign-In: $e');
       return false;
     } finally {
       isLoading.value = false;
@@ -246,5 +243,34 @@ class AuthController extends GetxController {
     offlineService.deleteData('currentUser_email');
     offlineService.deleteData('currentUser_name');
     offlineService.deleteData('currentUser_id');
+  }
+
+  /// Check if user is allowed (prevent new signups)
+  Future<bool> _checkIfUserIsAllowed(User user) async {
+    // Check metadata to see if it's a new account
+    final metadata = user.metadata;
+    if (metadata.creationTime == null || metadata.lastSignInTime == null) {
+      return true; // No metadata, assume ok? Or fail safe.
+    }
+
+    // If creation time is very close to last sign in time, it's a new user
+    // We allow a small buffer (e.g. 1 minute)
+    final diff = metadata.lastSignInTime!.difference(metadata.creationTime!).inSeconds.abs();
+    
+    // NOTE: This logic assumes that for existing users, creationTime will be strictly < lastSignInTime
+    // by a significant margin. For a BRAND NEW signup, they are almost identical.
+    
+    if (diff < 60) {
+      logger.w('New user registration attempt blocked: ${user.email}');
+      // Optional: Delete the user to keep auth clean
+      try {
+         await user.delete();
+      } catch (e) {
+        logger.e('Failed to delete unauthorized user: $e');
+      }
+      return false;
+    }
+    
+    return true;
   }
 }
