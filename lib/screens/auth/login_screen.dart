@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/auth_controller.dart';
 import '../../config/app_theme.dart';
-import '../../widgets/auth_header.dart';
 import '../../widgets/custom_input_field.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/social_login_button.dart';
@@ -14,8 +13,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>
-    with TickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin {
   final authController = Get.find<AuthController>();
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
@@ -28,12 +26,12 @@ class _LoginScreenState extends State<LoginScreen>
   void initState() {
     super.initState();
     _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     )..forward();
 
     _slideController = AnimationController(
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 1200),
       vsync: this,
     )..forward();
   }
@@ -78,283 +76,215 @@ class _LoginScreenState extends State<LoginScreen>
 
   Future<void> _handleGoogleLogin() async {
     final success = await authController.loginWithGoogle();
-
     if (success) {
       Get.offAllNamed('/home');
     } else {
       _showErrorDialog(
-        authController.errorMessage.value ??
-            'Erreur lors de la connexion Google',
+        authController.errorMessage.value ?? 'Erreur lors de la connexion Google',
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Decorative header background
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFF1a4d7e).withValues(alpha: 0.08),
-                      const Color(0xFFFF6B35).withValues(alpha: 0.04),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(24, 40, 24, 60),
-                  child: FadeTransition(
-                    opacity: _fadeController.drive(
-                      Tween<double>(begin: 0, end: 1),
-                    ),
-                    child: const AuthHeader(
-                      title: 'Connexion',
-                      subtitle: 'Accédez à votre compte Fivondronana',
-                      icon: Icons.login_rounded,
-                    ),
-                  ),
-                ),
+      resizeToAvoidBottomInset: false, // Important pour garder l'image fixe
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // 1. Image de fond (Full Screen)
+          Image.asset(
+            'assets/images/banniere_auth.png',
+            fit: BoxFit.cover,
+            height: double.infinity,
+            width: double.infinity,
+            alignment: Alignment.topCenter, // Focus sur le haut (les enfants)
+          ),
+
+          // 2. Gradient Overlay (Bas vers Haut) pour lisibilité
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                stops: const [0.0, 0.7, 1.0],
+                colors: [
+                  Colors.white.withValues(alpha: 1.0),     // Bas: Blanc opaque pour le formulaire
+                  Colors.white.withValues(alpha: 0.8),     // Milieu: Blanc semi-transparent
+                  Colors.white.withValues(alpha: 0.0),     // Haut: Transparent pour voir l'image
+                ],
               ),
+            ),
+          ),
 
-              // Form section
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 32,
+          // 3. Contenu du Formulaire (En bas)
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
                 ),
-                child: SlideTransition(
-                  position: _slideController.drive(
-                    Tween<Offset>(
-                      begin: const Offset(0, 0.3),
-                      end: Offset.zero,
+                child: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                  child: SlideTransition(
+                    position: _slideController.drive(
+                      Tween<Offset>(
+                        begin: const Offset(0, 0.2),
+                        end: Offset.zero,
+                      ),
                     ),
-                  ),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Email input
-                        CustomInputField(
-                          label: 'Adresse Email',
-                          hintText: 'votre.email@example.com',
-                          prefixIcon: Icons.email_outlined,
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          validator: (value) {
-                            if (value?.isEmpty ?? true) {
-                              return 'Email requis';
-                            }
-                            if (!RegExp(
-                              r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-                            ).hasMatch(value!)) {
-                              return 'Email invalide';
-                            }
-                            return null;
-                          },
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        // Password input
-                        CustomInputField(
-                          label: 'Mot de passe',
-                          hintText: '••••••••',
-                          prefixIcon: Icons.lock_outline,
-                          suffixIcon: _obscurePassword
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
-                          obscureText: _obscurePassword,
-                          controller: _passwordController,
-                          onSuffixIconPressed: () {
-                            setState(() {
-                              _obscurePassword = !_obscurePassword;
-                            });
-                          },
-                          validator: (value) {
-                            if (value?.isEmpty ?? true) {
-                              return 'Mot de passe requis';
-                            }
-                            return null;
-                          },
-                        ),
-
-                        const SizedBox(height: 12),
-
-                        // Forgot password link
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () {
-                              // TODO: Implement forgot password screen
-                            },
-                            child: Text(
-                              'Mot de passe oublié?',
-                              style: TextStyle(
-                                color: AppTheme.sampanaPrimaryColor,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 24),
-
-                        // Login button
-                        Obx(
-                          () => CustomButton(
-                            label: 'Se connecter',
-                            onPressed: _handleLogin,
-                            isLoading: authController.isLoading.value,
-                            backgroundColor: AppTheme.sampanaPrimaryColor,
-                            height: 56,
-                          ),
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        // Google Sign-In Button
-                        Obx(
-                          () => SocialLoginButton(
-                            label: 'Se connecter avec Google',
-                            icon: Icons.g_mobiledata,
-                            onPressed: _handleGoogleLogin,
-                            isLoading: authController.isLoading.value,
-                          ),
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        // Divider
-                        Row(
+                    child: FadeTransition(
+                      opacity: _fadeController,
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min, // Prend juste la place nécessaire
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Expanded(
-                              child: Divider(
-                                color: Colors.grey[300],
-                                thickness: 1,
+                            // Titre Harambato
+                            Text(
+                              'Harambato',
+                              style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                color: AppTheme.sampanaPrimaryColor,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: -1,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                              ),
-                              child: Text(
-                                'ou',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Bienvenue ! Connectez-vous pour continuer',
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: Colors.grey[800],
                               ),
                             ),
-                            Expanded(
-                              child: Divider(
-                                color: Colors.grey[300],
-                                thickness: 1,
-                              ),
-                            ),
-                          ],
-                        ),
+                            const SizedBox(height: 32),
 
-                        const SizedBox(height: 20),
-
-                        // Register section
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: const Color(
-                              0xFF1a4d7e,
-                            ).withValues(alpha: 0.05),
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(
-                              color: const Color(
-                                0xFF1a4d7e,
-                              ).withValues(alpha: 0.1),
+                            // Email
+                            CustomInputField(
+                              label: 'Adresse Email',
+                              hintText: 'votre.email@example.com',
+                              prefixIcon: Icons.email_outlined,
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) return 'Email requis';
+                                if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(value!)) {
+                                  return 'Email invalide';
+                                }
+                                return null;
+                              },
                             ),
-                          ),
-                          child: Column(
-                            children: [
-                              Text(
-                                'Pas encore de compte?',
-                                style: TextStyle(
-                                  color: Colors.grey[700],
-                                  fontSize: 14,
+                            const SizedBox(height: 16),
+
+                            // Password
+                            CustomInputField(
+                              label: 'Mot de passe',
+                              hintText: '••••••••',
+                              prefixIcon: Icons.lock_outline,
+                              suffixIcon: _obscurePassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                              obscureText: _obscurePassword,
+                              controller: _passwordController,
+                              onSuffixIconPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) return 'Mot de passe requis';
+                                return null;
+                              },
+                            ),
+                            
+                            // Mot de passe oublié
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                onPressed: () {}, // TODO
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
-                              ),
-                              const SizedBox(height: 12),
-                              SizedBox(
-                                width: double.infinity,
-                                height: 48,
-                                child: OutlinedButton(
-                                  onPressed: () => Get.toNamed('/register'),
-                                  style: OutlinedButton.styleFrom(
-                                    side: BorderSide(
-                                      color: AppTheme.sampanaPrimaryColor,
-                                      width: 2,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
+                                child: Text(
+                                  'Mot de passe oublié?',
+                                  style: TextStyle(
+                                    color: AppTheme.sampanaPrimaryColor,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
                                   ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Bouton Connexion
+                            Obx(() => CustomButton(
+                              label: 'Se connecter',
+                              onPressed: _handleLogin,
+                              isLoading: authController.isLoading.value,
+                              backgroundColor: AppTheme.sampanaPrimaryColor,
+                              height: 56,
+                            )),
+                            const SizedBox(height: 16),
+
+                            // "Ou" Divider
+                            Row(
+                              children: [
+                                Expanded(child: Divider(color: Colors.grey[300])),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  child: Text('ou', style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+                                ),
+                                Expanded(child: Divider(color: Colors.grey[300])),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+
+                            // Google Sign In
+                            Obx(() => SocialLoginButton(
+                              label: 'Se connecter avec Google',
+                              icon: Icons.g_mobiledata,
+                              onPressed: _handleGoogleLogin,
+                              isLoading: authController.isLoading.value,
+                            )),
+                            const SizedBox(height: 24),
+
+                            // Lien Inscription
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Pas encore de compte? ',
+                                  style: TextStyle(color: Colors.grey[700]),
+                                ),
+                                GestureDetector(
+                                  onTap: () => Get.toNamed('/register'),
                                   child: Text(
                                     'Créer un compte',
                                     style: TextStyle(
                                       color: AppTheme.sampanaPrimaryColor,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
+                          ],
                         ),
-
-                        const SizedBox(height: 24),
-
-                        // Info message
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: 6,
-                                height: 6,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.grey[400],
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Connexion requise pour le premier accès',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey[500],
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
