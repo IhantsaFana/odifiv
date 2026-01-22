@@ -125,11 +125,11 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
               gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
-                stops: const [0.0, 0.8, 1.0],
+                stops: const [0.0, 0.5, 0.7],
                 colors: [
-                  Colors.white.withValues(alpha: 1.0),
-                  Colors.white.withValues(alpha: 0.95),
-                  Colors.white.withValues(alpha: 0.0),
+                  Colors.white,                            // Bas: 100% Blanc
+                  Colors.white.withValues(alpha: 0.99),    // Milieu: Très opaque pour le texte
+                  Colors.white.withValues(alpha: 0.0),     // Haut: Transparent dès 70%
                 ],
               ),
             ),

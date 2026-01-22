@@ -110,11 +110,11 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
               gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
-                stops: const [0.0, 0.7, 1.0],
+                stops: const [0.0, 0.5, 0.7],
                 colors: [
-                  Colors.white.withValues(alpha: 1.0),     // Bas: Blanc opaque pour le formulaire
-                  Colors.white.withValues(alpha: 0.8),     // Milieu: Blanc semi-transparent
-                  Colors.white.withValues(alpha: 0.0),     // Haut: Transparent pour voir l'image
+                  Colors.white,                            // Bas: 100% Blanc
+                  Colors.white.withValues(alpha: 0.99),    // Milieu: Très opaque pour le texte
+                  Colors.white.withValues(alpha: 0.0),     // Haut: Transparent dès 70%
                 ],
               ),
             ),
