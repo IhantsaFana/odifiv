@@ -34,38 +34,41 @@ class SocialLoginButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
           ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
           children: [
-            // Icon ou Image
-            if (isLoading)
-              SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(textColor),
+            // Logo à gauche
+            Align(
+              alignment: Alignment.centerLeft,
+              child: isLoading
+                  ? SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(textColor),
+                      ),
+                    )
+                  : (imagePath != null)
+                      ? Image.asset(
+                          imagePath!,
+                          height: 24,
+                          width: 24,
+                        )
+                      : Icon(icon, color: textColor, size: 24),
+            ),
+
+            // Texte centré
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.5,
                 ),
-              )
-            else if (imagePath != null)
-              Image.asset(
-                imagePath!,
-                height: 24,
-                width: 24,
-              )
-            else if (icon != null)
-              Icon(icon, color: textColor, size: 24),
-            
-            const SizedBox(width: 12),
-            
-            // Label
-            Text(
-              label,
-              style: TextStyle(
-                color: textColor,
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.5,
+                textAlign: TextAlign.center,
               ),
             ),
           ],

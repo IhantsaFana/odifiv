@@ -9,6 +9,7 @@ import 'services/offline_service.dart';
 import 'services/connectivity_service.dart';
 import 'controllers/auth_controller.dart';
 import 'screens/auth/login_screen.dart';
+import 'screens/home/home_screen.dart'; // Import du nouveau HomeScreen
 
 final logger = Logger();
 
@@ -69,6 +70,7 @@ class AuthWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final authController = Get.find<AuthController>();
 
+    // Check auth state
     return Obx(() {
       if (authController.isAuthenticated.value) {
         return const HomeScreen();
@@ -79,63 +81,3 @@ class AuthWrapper extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final authController = Get.find<AuthController>();
-    
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Harambato'),
-        elevation: 0,
-        actions: [
-          // Bouton de déconnexion provisoire
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Hivoaka',
-            onPressed: () async {
-              await authController.logout();
-              Get.offAllNamed('/login');
-            },
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.person, size: 80, color: Color(0xFF1a4d7e)),
-            const SizedBox(height: 20),
-            Text(
-              'Tongasoa ise !',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Digitalisation an\'ny fivondronana Harambato',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const SizedBox(height: 30),
-            
-            // Bouton de déconnexion alternatif (plus visible)
-            ElevatedButton.icon(
-              onPressed: () async {
-                await authController.logout();
-                Get.offAllNamed('/login');
-              },
-              icon: const Icon(Icons.logout),
-              label: const Text('Hivoaka'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                backgroundColor: Colors.red[600],
-                foregroundColor: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

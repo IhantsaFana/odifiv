@@ -124,23 +124,54 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        // Titre
-                        Text(
-                          'Harambato',
-                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                            color: AppTheme.sampanaPrimaryColor,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: -1,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Tongasoa ise ! safidio ny fomba idiran\'ise ato amin\'ny Application',
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Colors.grey[800],
-                          ),
-                          textAlign: TextAlign.center,
+                        // Header avec Logo + Textes
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // Logo
+                            Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Image.asset(
+                                'assets/images/logo.png',
+                                height: 64, // Taille ajustée pour l'équilibre
+                                width: 64,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            
+                            // Textes
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Harambato',
+                                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                      color: AppTheme.sampanaPrimaryColor,
+                                      fontWeight: FontWeight.bold,
+                                      height: 1.1,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'Tonga soa ise ! Miankina amin\'ise ny herin\'ny Fivondronantsika',
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: Colors.grey[800],
+                                      height: 1.2,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 48),
 
@@ -166,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                         const SizedBox(height: 24),
                         // Note informative
                         Text(
-                          'Natao ho an\ny Mpiandraikitra nahazo alalana ihany, afaka miresaka amin\i Ihantsa Rakotondranaivo ise.',
+                          "Natao ho an'ny Mpiandraikitra ao amin'ny fivondronana Harambato faha 420 ity application ity. Mifandraisa amin'i Ihantsa RAKOTONDRANAIVO (OEKA Mikofo) raha tsy mbola manana kaonty ise. Mankasitraka !",
                           style: TextStyle(
                             color: Colors.grey[500],
                             fontSize: 12,
