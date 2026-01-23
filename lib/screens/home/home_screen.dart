@@ -4,7 +4,10 @@ import '../../controllers/home_controller.dart';
 import '../../controllers/auth_controller.dart';
 import '../../widgets/custom_header.dart';
 import '../../widgets/custom_bottom_nav.dart';
-import '../dashboard/dashboard_screen.dart';
+import '../members/members_screen.dart';
+import '../calendar/calendar_screen.dart';
+import '../profile/profile_screen.dart';
+import '../dashboard/dashboard_screen.dart'; // Import manquant ajouté
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -18,25 +21,11 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[50], // Background léger
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80),
+        preferredSize: const Size.fromHeight(70),
         child: Obx(() => CustomHeader(
           title: controller.currentTitle,
-          showLogo: true, // Montrer logo uniquement si besoin
-          trailing: IconButton(
-            onPressed: () {
-              // Action rapide ou Menu
-              // Pour l'instant Logout via dialog
-              _showLogoutDialog(context, authController);
-            },
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.logout_rounded, size: 20, color: Colors.black87),
-            ),
-          ),
+          showLogo: true,
+          // Pas de bouton trailing (logout déplacé dans Profil/Paramètres)
         )),
       ),
       body: Obx(() {
@@ -44,11 +33,11 @@ class HomeScreen extends StatelessWidget {
           case 0:
             return const DashboardScreen();
           case 1:
-            return const Center(child: Text('Calendrier - Coming Soon'));
+            return const CalendarScreen();
           case 2:
-            return const Center(child: Text('Membres - Coming Soon'));
+            return const MembersScreen();
           case 3:
-            return const Center(child: Text('Profil - Coming Soon'));
+            return const ProfileScreen();
           default:
             return const DashboardScreen();
         }

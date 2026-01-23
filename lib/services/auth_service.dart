@@ -161,7 +161,9 @@ class AuthService {
       logger.i('Starting Facebook Sign-In...');
 
       // Trigger Facebook Sign-In flow
-      final LoginResult result = await FacebookAuth.instance.login();
+      final LoginResult result = await FacebookAuth.instance.login(
+        permissions: ["public_profile", "email"]
+      );
 
       if (result.status == LoginStatus.cancelled) {
         logger.i('Facebook Sign-In cancelled by user');

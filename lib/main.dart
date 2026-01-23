@@ -9,7 +9,8 @@ import 'services/offline_service.dart';
 import 'services/connectivity_service.dart';
 import 'controllers/auth_controller.dart';
 import 'screens/auth/login_screen.dart';
-import 'screens/home/home_screen.dart'; // Import du nouveau HomeScreen
+import 'screens/auth/complete_profile_screen.dart';
+import 'screens/home/home_screen.dart';
 
 final logger = Logger();
 
@@ -56,6 +57,7 @@ class HarambatoApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/login', page: () => const LoginScreen()),
         GetPage(name: '/home', page: () => const HomeScreen()),
+        GetPage(name: '/complete-profile', page: () => const CompleteProfileScreen()),
       ],
       home: const AuthWrapper(),
     );
@@ -70,14 +72,15 @@ class AuthWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final authController = Get.find<AuthController>();
 
-    // Check auth state
+    // Check auth state + profile state
     return Obx(() {
-      if (authController.isAuthenticated.value) {
-        return const HomeScreen();
-      } else {
+      if (!authController.isAuthenticated.value) {
         return const LoginScreen();
+      } else if (!authController.hasProfile.value) {
+        return const CompleteProfileScreen();
+      } else {
+        return const HomeScreen();
       }
     });
   }
 }
-

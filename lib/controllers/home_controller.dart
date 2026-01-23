@@ -6,10 +6,10 @@ class HomeController extends GetxController {
 
   // Titres des pages pour le header
   final List<String> pageTitles = [
-    'Accueil',
-    'Calendrier',
-    'Membres', // Ou Annuaire
-    'Profil',
+    'Fandrefy',      // Dashboard
+    'Tetiandro',     // Calendar
+    'Mpikambana',    // Members
+    'Fikirakirana',  // Settings (ex-Profile)
   ];
 
   // Change l'onglet actif

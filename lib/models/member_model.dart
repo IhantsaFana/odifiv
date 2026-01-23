@@ -1,89 +1,110 @@
-class Member {
-  final String id;
-  final String firstName;
-  final String lastName;
-  final String? totem;
-  final String? photoUrl;
-  final String? address;
-  final DateTime? dateOfBirth;
-  final DateTime? commitmentDate;
-  final String? commitmentPlace;
-  final List<String> sampanaHistory;
-  final List<String> talents;
-  final String division; // Mpanazava or Tily
-  final String currentSampana;
-  final String? position;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-  Member({
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    this.totem,
+class MemberModel {
+  final String? id;
+  final String? photoUrl;
+  final String fullName;
+  final String totemOrNickname;
+  final String role; // beazina, mpiandraikitra, etc.
+  final String branch; // mavo, maitso, etc.
+  final String function;
+  final String phone;
+  final String? email;
+  final DateTime? birthDate;
+  final DateTime? entryDateScout;
+  final DateTime? promiseDateScout;
+  final List<ProgressionMilestone> progression;
+  final bool isAssurancePaid;
+  final String status;
+
+  MemberModel({
+    this.id,
     this.photoUrl,
-    this.address,
-    this.dateOfBirth,
-    this.commitmentDate,
-    this.commitmentPlace,
-    this.sampanaHistory = const [],
-    this.talents = const [],
-    required this.division,
-    required this.currentSampana,
-    this.position,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.fullName,
+    required this.totemOrNickname,
+    required this.role,
+    required this.branch,
+    required this.function,
+    required this.phone,
+    this.email,
+    this.birthDate,
+    this.entryDateScout,
+    this.promiseDateScout,
+    this.progression = const [],
+    this.isAssurancePaid = false,
+    this.status = 'active',
   });
 
-  String get fullName => '$firstName $lastName';
-
-  factory Member.fromJson(Map<String, dynamic> json) {
-    return Member(
-      id: json['id'] ?? '',
-      firstName: json['firstName'] ?? '',
-      lastName: json['lastName'] ?? '',
-      totem: json['totem'],
-      photoUrl: json['photoUrl'],
-      address: json['address'],
-      dateOfBirth: json['dateOfBirth'] != null
-          ? DateTime.parse(json['dateOfBirth'])
-          : null,
-      commitmentDate: json['commitmentDate'] != null
-          ? DateTime.parse(json['commitmentDate'])
-          : null,
-      commitmentPlace: json['commitmentPlace'],
-      sampanaHistory: List<String>.from(json['sampanaHistory'] ?? []),
-      talents: List<String>.from(json['talents'] ?? []),
-      division: json['division'] ?? '',
-      currentSampana: json['currentSampana'] ?? '',
-      position: json['position'],
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : DateTime.now(),
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'])
-          : DateTime.now(),
+  // Convert Firestore Document to MemberModel
+  factory MemberModel.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    
+    return MemberModel(
+      id: doc.id,
+      photoUrl: data['photoUrl'],
+      fullName: data['fullName'] ?? '',
+      totemOrNickname: data['totemOrNickname'] ?? '',
+      role: data['role'] ?? 'beazina',
+      branch: data['branch'] ?? 'mavo',
+      function: data['function'] ?? '',
+      phone: data['phone'] ?? '',
+      email: data['email'],
+      birthDate: (data['birthDate'] as Timestamp?)?.toDate(),
+      entryDateScout: (data['entryDateScout'] as Timestamp?)?.toDate(),
+      promiseDateScout: (data['promiseDateScout'] as Timestamp?)?.toDate(),
+      progression: (data['progression'] as List? ?? [])
+          .map((m) => ProgressionMilestone.fromMap(m))
+          .toList(),
+      isAssurancePaid: data['isAssurancePaid'] ?? false,
+      status: data['status'] ?? 'active',
     );
   }
 
-  Map<String, dynamic> toJson() {
+  // Convert MemberModel to JSON for Firestore
+  Map<String, dynamic> toFirestore() {
     return {
-      'id': id,
-      'firstName': firstName,
-      'lastName': lastName,
-      'totem': totem,
-      'photoUrl': photoUrl,
-      'address': address,
-      'dateOfBirth': dateOfBirth?.toIso8601String(),
-      'commitmentDate': commitmentDate?.toIso8601String(),
-      'commitmentPlace': commitmentPlace,
-      'sampanaHistory': sampanaHistory,
-      'talents': talents,
-      'division': division,
-      'currentSampana': currentSampana,
-      'position': position,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      if (photoUrl != null) 'photoUrl': photoUrl,
+      'fullName': fullName,
+      'totemOrNickname': totemOrNickname,
+      'role': role,
+      'branch': branch,
+      'function': function,
+      'phone': phone,
+      if (email != null) 'email': email,
+      if (birthDate != null) 'birthDate': Timestamp.fromDate(birthDate!),
+      if (entryDateScout != null) 'entryDateScout': Timestamp.fromDate(entryDateScout!),
+      if (promiseDateScout != null) 'promiseDateScout': Timestamp.fromDate(promiseDateScout!),
+      'progression': progression.map((m) => m.toMap()).toList(),
+      'isAssurancePaid': isAssurancePaid,
+      'status': status,
+    };
+  }
+}
+
+class ProgressionMilestone {
+  final String title;
+  final DateTime date;
+  final String place;
+
+  ProgressionMilestone({
+    required this.title,
+    required this.date,
+    required this.place,
+  });
+
+  factory ProgressionMilestone.fromMap(Map<String, dynamic> map) {
+    return ProgressionMilestone(
+      title: map['title'] ?? '',
+      date: (map['date'] as Timestamp).toDate(),
+      place: map['place'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'date': Timestamp.fromDate(date),
+      'place': place,
     };
   }
 }

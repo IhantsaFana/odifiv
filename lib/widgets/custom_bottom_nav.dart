@@ -18,7 +18,7 @@ class CustomBottomNav extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -33,7 +33,7 @@ class CustomBottomNav extends StatelessWidget {
               _buildNavItem(0, Icons.home_rounded, Icons.home_outlined, 'Accueil'),
               _buildNavItem(1, Icons.calendar_month_rounded, Icons.calendar_month_outlined, 'Agenda'),
               _buildNavItem(2, Icons.people_alt_rounded, Icons.people_alt_outlined, 'Membres'),
-              _buildNavItem(3, Icons.person_rounded, Icons.person_outline, 'Profil'),
+              _buildNavItem(3, Icons.settings_rounded, Icons.settings_outlined, 'Fikirakirana'),
             ],
           ),
         ),
@@ -52,7 +52,7 @@ class CustomBottomNav extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: isSelected
             ? BoxDecoration(
-                color: AppTheme.sampanaPrimaryColor.withOpacity(0.1),
+                color: AppTheme.sampanaPrimaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
               )
             : null,
